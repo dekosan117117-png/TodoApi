@@ -146,3 +146,7 @@ C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\n
 C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\dekos\OneDrive\デスクトップ\work\C_Data\HelloWorldApi\obj\Debug\net10.0\HelloWorldApi.sourcelink.json
