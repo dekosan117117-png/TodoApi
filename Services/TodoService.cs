@@ -20,23 +20,19 @@ public class TodoService : ITodoService
 
     public async Task<(bool isConflict, TodoResponseDto? result)> CreateAsync(TodoCreateDto dto)
     {
-        if (await _repository.ExistsAsync(0) == false)
+        var todo = new Todo
         {
-            var todo = new Todo
-            {
-                Title = dto.Title,
-                IsCompleted = dto.IsCompleted
-            };
-            await _repository.AddAsync(todo);
-            await _repository.SaveAsync();
-            return (false, new TodoResponseDto
-            {
-                Id = todo.Id,
-                Title = todo.Title,
-                IsCompleted = todo.IsCompleted
-            });
-        }
-        return (true, null);
+            Title = dto.Title,
+            IsCompleted = dto.IsCompleted
+        };
+        await _repository.AddAsync(todo);
+        await _repository.SaveAsync();
+        return (false, new TodoResponseDto
+        {
+            Id = todo.Id,
+            Title = todo.Title,
+            IsCompleted = todo.IsCompleted
+        });
     }
 
     public async Task<(bool isNotFound, TodoResponseDto? result)> UpdateAsync(int id, TodoCreateDto dto)
