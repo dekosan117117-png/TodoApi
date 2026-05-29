@@ -10,6 +10,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (error != null)
+        {
+            var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogError(error.Error, "予期しないエラーが発生しました");
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = "サーバーエラーが発生しました"
+            });
+        }
+    });
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
