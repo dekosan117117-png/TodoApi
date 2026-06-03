@@ -24,6 +24,7 @@ builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseSqlite("Data Source=todos.db"));
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -113,48 +114,20 @@ app.MapDelete("/todos/{id}", async (int id, ITodoService service) =>
 })
 .RequireAuthorization();
 
-app.MapPost("/register", async (RegisterDto dto, TodoDbContext db) =>
+app.MapPost("/register", async (RegisterDto dto, IAuthService authService) =>
 {
-    var exists = db.Users.Any(x => x.Username == dto.Username);
-    if (exists)
-    {
-        return Results.Conflict("そのユーザー名は既に使われてるよ！");
-    }
-
-    var user = new User
-    {
-        Username = dto.Username,
-        Password = dto.Password
-    };
-
-    db.Users.Add(user);
-    await db.SaveChangesAsync();
-
-    return Results.Ok("登録成功！");
+    var (isConflict, message) = await authService.RegisterAsync(dto);
+    return isConflict
+        ? Results.Conflict(message)
+        : Results.Ok(message);
 });
 
-app.MapPost("/login", (LoginDto dto, TodoDbContext db) =>
+app.MapPost("/login", async (LoginDto dto, IAuthService authService) =>
 {
-    var user = db.Users
-        .FirstOrDefault(x => x.Username == dto.Username && x.Password == dto.Password);
-
-    if (user == null)
-    {
-        return Results.Unauthorized();
-    }
-
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("THIS_IS_MY_SUPER_SECRET_KEY_12345"));
-    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-    var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
-        claims: null,
-        expires: DateTime.Now.AddHours(1),
-        signingCredentials: creds
-    );
-
-    var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
-
-    return Results.Ok(new { token = jwt });
+    var (isUnauthorized, token) = await authService.LoginAsync(dto);
+    return isUnauthorized
+        ? Results.Unauthorized()
+        : Results.Ok(new { token });
 });
 
 app.UseAuthentication();
