@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./todos.db:/app/todos.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
